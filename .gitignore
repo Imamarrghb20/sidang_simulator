@@ -1,5 +1,7 @@
 # Next.js
 .next/
+node_modules/
+*.tsbuildinfo
 out/
 
 # Konfigurasi rahasia
@@ -7,11 +9,24 @@ out/
 .env.*
 !.env.example
 
+# Kredensial dan konfigurasi alat lokal
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
+auth.json
+/.aws/
+/.codex/
+
 # Database lokal
 *.db
 *.db-*
 *.sqlite
 *.sqlite-*
+*.sqlite3
+*.sqlite3-*
 
 # Data pribadi dan hasil lokal
 /private-data/
@@ -19,3 +34,6 @@ out/
 /backups/
 /test-results/
 /playwright-report/
+
+# Diagnosis komputer lokal (bukan dokumentasi aplikasi)
+/docs/DIAGNOSIS-STORAGE.md

@@ -1,0 +1,132 @@
+import { test, expect } from '@playwright/test';
+
+test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan ulang', async ({ page, request }, testInfo) => {
+  const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
+  const title = `Perpustakaan ${testInfo.project.name}`; const width = page.viewportSize()!.width;
+  async function screenshot(name: string) {
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.screenshot({ path: testInfo.outputPath(`${name}.png`), fullPage: true });
+  }
+  async function navigate(label: string) {
+    const menu = page.getByRole('button', { name: 'Buka menu navigasi', exact: true });
+    if (await menu.isVisible()) await menu.click();
+    await page.getByRole('navigation', { name: 'Navigasi utama' }).getByRole('button', { name: label, exact: true }).click();
+    await expect(page.getByRole('heading', { name: label, exact: true })).toBeVisible();
+    if (width < 961) await expect(page.getByRole('button', { name: 'Buka menu navigasi', exact: true })).toHaveAttribute('aria-expanded', 'false');
+  }
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Beranda & riwayat', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mulai latihan', exact: true })).toBeVisible();
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('link', { name: 'Langsung ke konten', exact: true })).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('main')).toBeFocused();
+  await screenshot('01-beranda');
+  if (width < 961) {
+    const before = (await page.locator('main').boundingBox())!.y;
+    await page.getByRole('button', { name: 'Buka menu navigasi', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Tutup menu navigasi', exact: true })).toHaveAttribute('aria-expanded', 'true');
+    expect((await page.locator('main').boundingBox())!.y).toBeGreaterThan(before);
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: 'Buka menu navigasi', exact: true })).toBeFocused();
+  }
+  await navigate('Profil penelitian');
+  await page.getByRole('button', { name: 'Simpan profil', exact: true }).click();
+  await expect(page.getByLabel('Judul sementara', { exact: false })).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByLabel('Judul sementara', { exact: false })).toBeFocused();
+  await expect(page.locator('#profile-title-error')).toContainText('Judul wajib diisi');
+  await page.getByLabel('Judul sementara').fill(title);
+  await page.getByLabel('Ringkasan latar belakang').fill('Pencatatan peminjaman masih manual. Penelitian ini menggunakan data sintetis untuk memeriksa antarmuka latihan.');
+  await page.getByLabel('Tujuan *', { exact: true }).fill('Mempermudah pencatatan peminjaman.');
+  await screenshot('02-profil');
+  await page.route('**/api/profiles', route => route.request().method() === 'POST' ? route.abort('failed') : route.continue());
+  await page.getByRole('button', { name: 'Simpan profil', exact: true }).click();
+  await expect(page.locator('main').getByRole('alert')).toContainText('Permintaan belum dapat dikonfirmasi');
+  await expect(page.getByLabel('Judul sementara')).toHaveValue(title);
+  await page.getByRole('button', { name: 'Periksa status', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Profil penelitian', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Judul sementara')).toHaveValue(title);
+  await page.unroute('**/api/profiles');
+  await page.getByRole('button', { name: 'Simpan profil', exact: true }).click();
+  await expect(page.getByRole('status')).toContainText('Profil tersimpan');
+  await navigate('Beranda & riwayat');
+  await page.getByRole('button', { name: 'Mulai latihan', exact: true }).click();
+  await page.getByRole('combobox', { name: 'Profil penelitian', exact: true }).selectOption({ label: title });
+  await page.getByRole('combobox', { name: 'Mode', exact: true }).selectOption('simulasi');
+  await page.getByLabel('Jumlah pertanyaan utama').fill('2');
+  await screenshot('03-pengaturan-sesi');
+  await page.getByRole('button', { name: 'Buat sesi', exact: true }).click();
+  await page.getByRole('button', { name: 'Mulai pertanyaan', exact: true }).click();
+  const sessionId = new URL(page.url()).searchParams.get('sesi')!;
+  const endpoint = `**/api/sessions/${sessionId}`;
+  const oldAnswer = 'Saya ingin mengurangi pencatatan berulang.';
+  await page.getByLabel('Jawabanmu').fill(oldAnswer);
+  await navigate('Beranda & riwayat');
+  await expect(page.getByRole('heading', { name: 'Lanjutkan latihan', exact: true })).toBeVisible();
+  await screenshot('03b-lanjutkan-sesi');
+  await page.getByRole('button', { name: 'Lanjutkan sesi', exact: true }).click();
+  await expect(page.getByLabel('Jawabanmu')).toHaveValue(oldAnswer);
+  await screenshot('04-sesi-menjawab');
+  expect((await page.locator('.session-page').boundingBox())!.width).toBeLessThanOrEqual(800);
+  let submissions = 0;
+  await page.route(endpoint, route => {
+    if (route.request().method() === 'POST') { submissions++; return route.abort('failed'); }
+    return route.continue();
+  });
+  // Dua klik dalam giliran yang sama harus menghasilkan satu permintaan yang berjalan.
+  await page.getByRole('button', { name: 'Kirim jawaban', exact: true }).evaluate((button: HTMLButtonElement) => { button.click(); button.click(); });
+  await expect(page.locator('main').getByRole('alert')).toContainText('Permintaan belum dapat dikonfirmasi');
+  expect(submissions).toBe(1);
+  await expect(page.getByLabel('Jawabanmu')).toHaveValue(oldAnswer);
+  await expect(page.getByText('Jawaban tersimpan', { exact: true })).toHaveCount(0);
+  await page.unroute(endpoint);
+  await request.get('http://127.0.0.1:3101/fail-next');
+  await page.getByRole('button', { name: 'Kirim jawaban', exact: true }).click();
+  await expect(page.locator('main').getByRole('alert')).toContainText('Permintaan AI gagal');
+  await expect(page.getByText(oldAnswer, { exact: true })).toBeVisible();
+  await screenshot('05-sesi-gagal');
+  await request.post('http://127.0.0.1:3101/restart-app');
+  await expect.poll(async () => { try { return (await request.get('/api/profiles')).status(); } catch { return 0; } }).toBe(200);
+  await page.reload();
+  await page.getByRole('button', { name: 'Coba kembali', exact: true }).click();
+  await expect(page.getByLabel('Jawabanmu')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Evaluasi jawaban' })).toHaveCount(0);
+  let dto = await (await request.get(`/api/sessions/${sessionId}`)).json();
+  expect(dto.turns[0].evaluation).toBeNull(); expect(dto.weaknesses).toEqual([]); expect(dto.turns).toHaveLength(2);
+  await expect(page.getByText('Pertanyaan susulan', { exact: true })).toBeVisible();
+  await page.getByLabel('Jawabanmu').fill('Pencatatan sekali akan mendukung tujuan kemudahan penggunaan.');
+  await page.getByRole('button', { name: 'Kirim jawaban', exact: true }).click();
+  await expect(page.getByText('Pertanyaan utama 2 dari 2', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Akhiri sesi lebih awal' }).click();
+  await expect(page.getByRole('heading', { name: 'Hasil sesi', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Evaluasi jawaban' })).toHaveCount(2);
+  await screenshot('06-evaluasi');
+  dto = await (await request.get(`/api/sessions/${sessionId}`)).json();
+  expect(dto.status).toBe('completed'); expect(dto.turns[0].evaluation).not.toBeNull();
+  const sourceWeakness = dto.weaknesses[0].id;
+  await page.getByRole('button', { name: 'Pelajari kelemahan', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Daftar kelemahan', exact: true })).toBeVisible();
+  const source = page.locator('article').filter({ has: page.locator(`#status-${sourceWeakness}`) });
+  await source.getByRole('combobox', { name: 'Status', exact: true }).selectOption('sedang diperbaiki');
+  await source.getByLabel('Catatan tindak lanjut').fill('Hubungkan alasan dengan tujuan.');
+  await source.getByRole('button', { name: 'Simpan status & catatan' }).click();
+  await expect(page.getByRole('status')).toContainText('Catatan dan status tersimpan');
+  await source.getByRole('checkbox').check();
+  await screenshot('07-kelemahan');
+  await page.getByRole('button', { name: 'Latih kembali (1)', exact: true }).click();
+  await page.getByRole('button', { name: 'Mulai pertanyaan', exact: true }).click();
+  await page.getByLabel('Jawabanmu').fill('Saya menghubungkan pengurangan pencatatan berulang dengan tujuan kemudahan pencatatan.');
+  await page.getByRole('button', { name: 'Kirim jawaban', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Hasil sesi', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Perbandingan latihan ulang' })).toBeVisible();
+  const overview = await (await request.get('/api/profiles')).json();
+  const weakness = overview.weaknesses.find((w: { id: string }) => w.id === sourceWeakness);
+  expect(weakness.status).toBe('sedang diperbaiki'); expect(weakness.note).toBe('Hubungkan alasan dengan tujuan.');
+  await page.reload(); await expect(page.getByRole('heading', { name: 'Perbandingan latihan ulang' })).toBeVisible();
+  const columns = page.locator('.comparison > div'); const previous = (await columns.nth(0).boundingBox())!; const current = (await columns.nth(1).boundingBox())!;
+  if (width < 701) { expect(current.y).toBeGreaterThan(previous.y); expect(Math.abs(current.x - previous.x)).toBeLessThan(2); }
+  else expect(current.x).toBeGreaterThan(previous.x);
+  await screenshot('08-latihan-ulang');
+  expect(errors).toEqual([]);
+});

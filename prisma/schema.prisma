@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+
+model Profile {
+  id String @id @default(cuid())
+  context String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sessions Session[]
+  weaknesses Weakness[]
+}
+
+model Session {
+  id String @id @default(cuid())
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id])
+  snapshot String
+  mode String
+  total Int
+  aiConfig String
+  actualModel String?
+  status String @default("active")
+  leaseToken String?
+  leaseUntil DateTime?
+  error String?
+  createdAt DateTime @default(now())
+  turns Turn[]
+  targets Target[]
+  weaknesses Weakness[]
+}
+
+model Turn {
+  id String @id @default(cuid())
+  sessionId String
+  session Session @relation(fields: [sessionId], references: [id])
+  ordinal Int
+  main Int
+  followup Boolean @default(false)
+  question String
+  answer String?
+  evaluation String?
+  weaknesses Weakness[]
+  @@unique([sessionId, ordinal])
+}
+
+model Weakness {
+  id String @id @default(cuid())
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id])
+  sessionId String
+  session Session @relation(fields: [sessionId], references: [id])
+  turnId String
+  turn Turn @relation(fields: [turnId], references: [id])
+  evidence String
+  status String @default("perlu dilatih")
+  note String @default("")
+  targets Target[]
+}
+
+model Target {
+  sessionId String
+  session Session @relation(fields: [sessionId], references: [id])
+  weaknessId String
+  weakness Weakness @relation(fields: [weaknessId], references: [id])
+  main Int
+  @@id([sessionId, weaknessId])
+}

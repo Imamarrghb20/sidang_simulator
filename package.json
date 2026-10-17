@@ -1,0 +1,44 @@
+{
+  "name": "sidang-simulator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "npm run db:generate && next build",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "test:ai": "tsx scripts/test-ai.ts",
+    "db:generate": "node scripts/prisma.mjs generate",
+    "db:setup": "node scripts/prisma.mjs migrate deploy"
+  },
+  "dependencies": {
+    "@next/env": "^16.4.2",
+    "@prisma/client": "^6.19.0",
+    "next": "^16.0.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
+    "prisma": "^6.19.0",
+    "tailwindcss": "^4.1.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
+  },
+  "overrides": {
+    "deepmerge-ts": "^8.0.2"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
