@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan ulang', async ({ page, request }, testInfo) => {
   const errors: string[] = []; page.on('pageerror', e => errors.push(e.message));
+  const externalRequests: string[] = [];
+  page.on('request', request => { const url = new URL(request.url()); if (url.protocol.startsWith('http') && !['127.0.0.1', 'localhost'].includes(url.hostname)) externalRequests.push(url.origin); });
   const title = `Perpustakaan ${testInfo.project.name}`; const width = page.viewportSize()!.width;
   async function screenshot(name: string) {
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -16,10 +18,16 @@ test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan 
     if (width < 961) await expect(page.getByRole('button', { name: 'Buka menu navigasi', exact: true })).toHaveAttribute('aria-expanded', 'false');
   }
   await page.goto('/');
+  await expect(page).toHaveTitle('Urai');
+  await expect(page.locator('meta[name="application-name"]')).toHaveAttribute('content', 'Urai');
+  await expect(page.getByRole('banner').locator('.brand-name')).toHaveText('Urai');
+  await expect(page.getByText('Latih jawaban. Perkuat argumen.', { exact: true })).toHaveCount(1);
+  await expect(page.locator('.footer-signature')).toHaveText('Urai · Arsip latihan akademik');
   await expect(page.getByRole('heading', { name: 'Beranda & riwayat', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Mulai latihan', exact: true })).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'Langsung ke konten', exact: true })).toBeFocused();
+  await expect(page.getByRole('link', { name: 'Langsung ke konten', exact: true })).toHaveCSS('outline-style', 'solid');
   await page.keyboard.press('Enter');
   await expect(page.locator('main')).toBeFocused();
   await screenshot('01-beranda');
@@ -53,7 +61,7 @@ test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan 
   await navigate('Beranda & riwayat');
   await page.getByRole('button', { name: 'Mulai latihan', exact: true }).click();
   await page.getByRole('combobox', { name: 'Profil penelitian', exact: true }).selectOption({ label: title });
-  await page.getByRole('combobox', { name: 'Mode', exact: true }).selectOption('simulasi');
+  await page.getByRole('radio', { name: /^Simulasi/ }).check();
   await page.getByLabel('Jumlah pertanyaan utama').fill('2');
   await screenshot('03-pengaturan-sesi');
   await page.getByRole('button', { name: 'Buat sesi', exact: true }).click();
@@ -65,10 +73,10 @@ test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan 
   await navigate('Beranda & riwayat');
   await expect(page.getByRole('heading', { name: 'Lanjutkan latihan', exact: true })).toBeVisible();
   await screenshot('03b-lanjutkan-sesi');
-  await page.getByRole('button', { name: 'Lanjutkan sesi', exact: true }).click();
+  await page.getByRole('article').filter({ has: page.getByRole('heading', { name: title, exact: true }) }).getByRole('button', { name: 'Lanjutkan sesi', exact: true }).click();
   await expect(page.getByLabel('Jawabanmu')).toHaveValue(oldAnswer);
   await screenshot('04-sesi-menjawab');
-  expect((await page.locator('.session-page').boundingBox())!.width).toBeLessThanOrEqual(800);
+  expect((await page.locator('.turn-active').boundingBox())!.width).toBeLessThanOrEqual(800);
   let submissions = 0;
   await page.route(endpoint, route => {
     if (route.request().method() === 'POST') { submissions++; return route.abort('failed'); }
@@ -101,6 +109,11 @@ test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan 
   await page.getByRole('button', { name: 'Akhiri sesi lebih awal' }).click();
   await expect(page.getByRole('heading', { name: 'Hasil sesi', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Evaluasi jawaban' })).toHaveCount(2);
+  const firstTurn = page.locator('.turn-card').first();
+  const answer = (await firstTurn.locator('.student-block').boundingBox())!;
+  const evaluation = (await firstTurn.locator('.evaluation-block').boundingBox())!;
+  expect(evaluation.y).toBeGreaterThanOrEqual(answer.y + answer.height);
+  await expect(firstTurn.locator('.evaluation-details')).not.toHaveAttribute('open');
   await screenshot('06-evaluasi');
   dto = await (await request.get(`/api/sessions/${sessionId}`)).json();
   expect(dto.status).toBe('completed'); expect(dto.turns[0].evaluation).not.toBeNull();
@@ -128,5 +141,27 @@ test('alur latihan dan UI responsif: profil, sesi, evaluasi, kelemahan, latihan 
   if (width < 701) { expect(current.y).toBeGreaterThan(previous.y); expect(Math.abs(current.x - previous.x)).toBeLessThan(2); }
   else expect(current.x).toBeGreaterThan(previous.x);
   await screenshot('08-latihan-ulang');
+  // Evaluasi mode Latihan berada di bawah jawaban asal saat giliran berikutnya terbuka.
+  const practice = await request.post('/api/sessions', { data: { profileId: dto.profileId, mode: 'latihan', total: 2, weaknessIds: [] } });
+  expect(practice.ok()).toBe(true);
+  const practiceDto = await practice.json();
+  await page.goto(`/?sesi=${practiceDto.id}`);
+  await page.getByRole('button', { name: 'Mulai pertanyaan', exact: true }).click();
+  await page.getByLabel('Jawabanmu').fill('Saya menghubungkan alasan dengan tujuan penelitian yang tersedia.');
+  await page.getByRole('button', { name: 'Kirim jawaban', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Evaluasi jawaban', exact: true })).toHaveCount(1);
+  await expect(page.getByText('Pertanyaan susulan', { exact: true })).toBeVisible();
+  await expect(page.locator('.turn-active')).toBeVisible();
+  const priorAnswer = (await page.locator('.turn-card').first().locator('.student-block').boundingBox())!;
+  const priorEvaluation = (await page.locator('.turn-card').first().locator('.evaluation-block').boundingBox())!;
+  expect(priorEvaluation.y).toBeGreaterThanOrEqual(priorAnswer.y + priorAnswer.height);
+  await page.getByLabel('Jawabanmu').fill('a'.repeat(6001));
+  await expect(page.getByLabel('Jawabanmu')).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByRole('button', { name: 'Kirim jawaban', exact: true })).toBeDisabled();
+  await page.getByLabel('Jawabanmu').fill('Saya akan menjelaskan hubungan alasan dan bukti dengan lebih terperinci.');
+  await screenshot('09-latihan-evaluasi-inline');
+  await page.getByRole('button', { name: 'Akhiri sesi lebih awal' }).click();
+  await expect(page.getByRole('heading', { name: 'Hasil sesi', exact: true })).toBeVisible();
   expect(errors).toEqual([]);
+  expect(externalRequests).toEqual([]);
 });

@@ -30,6 +30,17 @@ const gateway = createServer(async (req, res) => {
       weaknesses: [{ dimension: 'kejelasanAlasan', title: 'Hubungan alasan dan tujuan', quote: request.history.at(-1).answer, reason: 'Alasan perlu dihubungkan dengan tujuan penelitian.', improvement: 'Jelaskan hubungan dengan [bukti yang tersedia].', contextRefs: [{ field: 'goals', quote: request.context.goals }] }],
       contextRefs: [], followup: request.allowFollowup && !request.target ? 'Dapatkah Anda menjelaskan hubungan alasan tersebut dengan tujuan?' : null,
     };
+    // Regresi layout memakai evaluasi panjang melalui jalur API/validasi yang sama.
+    if (request.kind !== 'question' && request.context.title.startsWith('Regresi alur vertikal ')) {
+      value.summary = 'Jawaban singkat perlu menjelaskan hubungan alasan, bukti, dan tujuan penelitian.';
+      value.weaknesses = Array.from({ length: 3 }, (_, index) => ({
+        dimension: 'kejelasanAlasan', title: `Temuan terperinci ${index + 1}`,
+        quote: request.history.at(-1).answer,
+        reason: 'Alasan perlu dihubungkan dengan tujuan penelitian. Jelaskan bagaimana keputusan tersebut mengikuti kebutuhan yang tersedia dan bedakan informasi yang sudah diketahui dari rencana yang belum diuji. '.repeat(8).trim(),
+        improvement: 'Uraikan hubungan alasan dan tujuan secara bertahap, sertakan [bukti yang tersedia], lalu jelaskan keterbatasannya tanpa mengarang hasil penelitian. '.repeat(6).trim(),
+        contextRefs: [{ field: 'goals', quote: request.context.goals }],
+      }));
+    }
     res.writeHead(200, { 'Content-Type': 'application/json' }); res.end(JSON.stringify({ model: 'browser-fixture-only', choices: [{ message: { content: JSON.stringify(value) } }] }));
   } catch { res.writeHead(400); res.end(); }
 });

@@ -1,8 +1,18 @@
-# Sidang Simulator
+# Urai
+
+**Latih jawaban. Perkuat argumen.**
 
 Aplikasi lokal untuk latihan kolokium atau sidang skripsi: konteks penelitian → latihan → kelemahan dengan bukti → perbaikan → latihan ulang. Acuan lingkup adalah [PRD](docs/PRD.md), dengan instruksi proyek di [AGENT.MD](AGENT.MD) (repository memakai nama tunggal ini; tidak ada AGENTS.md).
 
 Implementasi mencakup alur MVP. **Siklus dua sesi dengan AI nyata melalui 9Router telah lulus**, menggunakan data sintetis dan database terpisah. Konfigurasi `.env.local` dipertahankan. Tes browser dengan gateway palsu dilaporkan terpisah dari uji AI nyata; pemadaman proses 9Router secara langsung masih belum diuji. Lihat [catatan penerimaan](docs/IMPLEMENTATION.md) dan [hasil validasi AI](docs/AI-VALIDATION.md).
+
+## Identitas dan domain
+
+Nama aplikasi adalah **Urai** dan nama package npm adalah `urai`. Tagline ditampilkan pada header aplikasi; label halaman tetap menjelaskan fungsi seperti profil penelitian, sesi latihan, dan daftar kelemahan. Arsip referensi Stitch dipertahankan dengan isi dan nama berkas aslinya. Rebranding tidak mengganti folder lokal, remote GitHub, riwayat migrasi, data pengguna, atau konfigurasi AI.
+
+Pemeriksaan repository dan konfigurasi lokal tidak menemukan domain publik, `metadataBase`/canonical, konfigurasi Vercel/Netlify/Cloudflare, Docker/CNAME, atau workflow deployment. Server tetap di loopback dan API membatasi host lokal. Konfigurasi domain publik menunggu alamat domain lengkap dari pemilik proyek; tidak ada alamat deployment yang dibuat atau DNS yang diubah. Konfigurasi pada akun hosting eksternal belum diperiksa.
+
+Verifikasi branding: lint, typecheck, 12 tes service/konfigurasi, build produksi Next.js, dan 6 tes browser pada 360/768/1440 px lulus. Browser memeriksa judul tab dan metadata Urai, header/footer, satu kemunculan tagline, serta alur aplikasi yang tersedia. Build dijalankan langsung dengan `node node_modules/next/dist/bin/next build`, menggunakan Prisma Client yang tersedia tanpa regenerasi DLL yang dipakai server dev. Screenshot desktop/mobile ditinjau dan tersimpan lokal di `playwright-report/urai-review/`. Database, file lingkungan, migrasi, arsip desain, workspace, dan remote Git dipastikan tetap sama; tidak ditemukan API key atau nama lama yang tampil dalam aset client. AI nyata tidak dipanggil ulang untuk perubahan branding.
 
 ## Setup Windows
 
@@ -60,7 +70,7 @@ Tanpa konfigurasi AI, profil dan riwayat tetap tersedia. Meminta pertanyaan mena
 7. Di **Daftar kelemahan**, tinjau kutipan, alasan, rujukan field konteks, dan perbaikan. Tambahkan catatan dan ubah status secara manual.
 8. Pilih 1–10 kelemahan dari satu profil, lalu tekan **Latih kembali**. Satu pertanyaan utama dibuat per kelemahan. Jawaban lama dan baru tampil berdampingan pada desktop dan bertumpuk pada ponsel; status tidak otomatis berubah setelah pertanyaan diulang.
 
-Antarmuka memakai sidebar desktop dan menu mobile yang dibuka di alur halaman. Formulir profil dikelompokkan menjadi dasar, arah/batasan, serta metode/evaluasi, dengan error dan penghitung karakter di dekat field. Area baca sesi dibatasi 780 px; pertanyaan, jawaban, dan evaluasi dibedakan secara visual. Draf jawaban dipertahankan selama halaman aplikasi tetap terbuka, termasuk ketika berpindah ke riwayat atau permintaan gagal. Rincian desain dan bukti pemeriksaan ada di [tinjauan UI](docs/UI-REVIEW.md).
+Antarmuka mengadaptasi referensi lokal di `design/stitch/` ke komponen Next.js dan tema Tailwind proyek: navigasi atas desktop, menu mobile di alur halaman, permukaan menyerupai kertas, aksen navy, sudut tegas, serta judul dan pertanyaan serif. Font sistem digunakan tanpa CDN atau dependensi baru. Halaman sesi memakai satu alur vertikal dengan lebar baca maksimal 780 px: pertanyaan → jawaban → ringkasan evaluasi → pertanyaan berikutnya. Rincian evaluasi dapat dibuka/tutup, tanpa kolom kanan atau tinggi percakapan tetap. Formulir profil tetap dikelompokkan, dengan error dan penghitung karakter dekat field. Kelemahan menempatkan bukti dan formulir tindak lanjut berdampingan di desktop. Draf jawaban dipertahankan selama aplikasi terbuka, termasuk ketika berpindah ke riwayat atau permintaan gagal. Tidak ada klaim autosave draf ke disk. Lihat [tinjauan UI dan perbedaan dari Stitch](docs/UI-REVIEW.md).
 
 Keluaran AI diperiksa dengan Zod dan pencocokan kutipan terhadap jawaban atau field salinan konteks. Keluaran tidak valid ditolak tanpa menyimpan evaluasi sukses. Validasi ini tidak menjamin kebenaran ilmiah, relevansi semantik, atau ketahanan sempurna terhadap instruksi dalam data. Umpan balik bukan penilaian resmi, verifikasi pustaka, atau prediksi kelulusan. Jawaban baru tidak otomatis menjadi fakta profil.
 
@@ -77,7 +87,7 @@ npm.cmd run build
 
 Tes service memakai SQLite sementara di `test-results/`, adapter palsu yang diinjeksi secara eksplisit, dan fetch palsu untuk format gateway, timeout, serta HTTP gagal. Tidak ada panggilan model nyata. Tes mencakup snapshot, persistensi, batas giliran, pengiriman serentak, retry, bukti, kerahasiaan evaluasi Simulasi, sesi kosong, dan siklus dua sesi.
 
-Hasil pemeriksaan pada 18 Oktober 2026: lint, tipe, build, **12 tes service/konfigurasi** dan **3 tes browser pada lebar 360, 768, serta 1440 px lulus**. Migrasi sebelumnya sudah diterapkan; perubahan UI tidak mengubah skema. Tampilan ditinjau melalui tangkapan layar dengan data sintetis. Pemeriksaan aset browser tidak menemukan nilai API key.
+Hasil pemeriksaan koreksi layout sesi pada 18 Oktober 2026: lint, tipe, build Next.js, **12 tes service/konfigurasi** dan **6 tes browser pada lebar 360, 768, serta 1440 px lulus**. Skrip `npm.cmd run build` tertahan EPERM saat mengganti DLL Prisma yang dipakai server dev aktif; build berhasil melalui `node node_modules/next/dist/bin/next build` dengan client yang tersedia karena skema tidak berubah. Server dev dipertahankan. Browser memeriksa profil → sesi → evaluasi → kelemahan → latihan ulang, penyembunyian evaluasi Simulasi, kegagalan/retry, draf, batas jawaban, serta tiga jawaban pendek dengan evaluasi panjang. Buka/tutup rincian melalui keyboard mempertahankan seluruh isi dan mengembalikan posisi pertanyaan berikutnya tanpa ruang cadangan. Tidak ditemukan overflow horizontal atau error JavaScript. Screenshot sintetis koreksi layout berada di `playwright-report/session-flow-review/` dan telah ditinjau pada desktop/mobile; screenshot siklus lengkap diperbarui di `playwright-report/stitch-review/`. Hash `.env`, `.env.local`, dan database utama tetap sama; API key tidak ditemukan dalam 12 aset client yang diperiksa. AI nyata tidak dipanggil ulang untuk perubahan presentasi ini.
 
 Tes browser membutuhkan build terbaru dan Chromium Playwright atau Chrome terpasang:
 

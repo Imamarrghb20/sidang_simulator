@@ -35,5 +35,8 @@ auth.json
 /test-results/
 /playwright-report/
 
+# Screenshot lokal aplikasi yang dapat memuat data pengguna
+/design/*.png
+
 # Diagnosis komputer lokal (bukan dokumentasi aplikasi)
 /docs/DIAGNOSIS-STORAGE.md

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Sidang Simulator</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-secondary-fixed-variant": "#224f3c", "error": "#ba1a1a", "error-container": "#ffdad6", "tertiary": "#251400", "secondary-fixed": "#bceed3", "surface-bright": "#f3fbf5", "on-tertiary-fixed-variant": "#643f00", "surface-dim": "#d4dcd6", "on-primary-container": "#8395b1", "on-surface-variant": "#44474d", "secondary-fixed-dim": "#a1d1b8", "on-primary-fixed": "#081c33", "background": "#f3fbf5", "on-secondary": "#ffffff", "inverse-on-surface": "#ebf3ec", "tertiary-container": "#402700", "surface-container-lowest": "#ffffff", "on-error": "#ffffff", "outline": "#74777e", "primary-fixed": "#d4e3ff", "on-primary-fixed-variant": "#364861", "on-primary": "#ffffff", "surface-variant": "#dce4de", "on-secondary-fixed": "#002114", "surface": "#f3fbf5", "inverse-surface": "#2a322e", "outline-variant": "#c4c6ce", "on-tertiary": "#ffffff", "on-error-container": "#93000a", "tertiary-fixed-dim": "#f7bc6e", "surface-container-high": "#e2eae4", "on-background": "#161d19", "primary-fixed-dim": "#b5c8e6", "on-tertiary-fixed": "#2a1800", "inverse-primary": "#b5c8e6", "surface-tint": "#4e5f7a", "surface-container-highest": "#dce4de", "primary": "#04182f", "surface-container": "#e8f0e9", "primary-container": "#1b2d45", "secondary-container": "#bceed3", "on-tertiary-container": "#be8941", "on-secondary-container": "#406d58", "secondary": "#3a6752", "surface-container-low": "#eef6ef", "tertiary-fixed": "#ffddb6", "on-surface": "#161d19" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin": "2rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-xl": "2.5rem", "margin-mobile": "1rem", "space-sm": "0.5rem", "space-lg": "1.5rem", "gutter-mobile": "1rem", "space-md": "1rem" }, "fontFamily": { "label-lg": [ "Inter" ], "display-lg-mobile": [ "Newsreader" ], "title-lg": [ "Newsreader" ], "body-md": [ "Inter" ], "body-sm": [ "Inter" ], "label-md": [ "Inter" ], "label-sm": [ "Inter" ], "headline-sm": [ "Newsreader" ], "display-lg": [ "Newsreader" ], "headline-lg-mobile": [ "Newsreader" ], "headline-lg": [ "Newsreader" ], "body-lg": [ "Newsreader" ], "headline-md": [ "Newsreader" ] }, "fontSize": { "label-lg": [ "0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" } ], "display-lg-mobile": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.015em", "fontWeight": "400" } ], "title-lg": [ "1.125rem", { "lineHeight": "1.5rem", "fontWeight": "600" } ], "body-md": [ "0.9375rem", { "lineHeight": "1.5rem", "fontWeight": "400" } ], "body-sm": [ "0.8125rem", { "lineHeight": "1.25rem", "fontWeight": "400" } ], "label-md": [ "0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.04em", "fontWeight": "500" } ], "label-sm": [ "0.6875rem", { "lineHeight": "0.875rem", "letterSpacing": "0.06em", "fontWeight": "600" } ], "headline-sm": [ "1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" } ], "display-lg": [ "2.75rem", { "lineHeight": "3.25rem", "letterSpacing": "-0.02em", "fontWeight": "400" } ], "headline-lg-mobile": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "500" } ], "headline-lg": [ "2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.015em", "fontWeight": "500" } ], "body-lg": [ "1.125rem", { "lineHeight": "1.875rem", "fontWeight": "400" } ], "headline-md": [ "1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "500" } ] } } } };</script></head><body class="min-h-full bg-surface text-on-surface font-body-md text-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-fixed"><header class="fixed top-0 left-0 right-0 z-50 bg-surface border-b border-surface-container-high"><div class="h-16 max-w-7xl mx-auto px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-lg"><div class="flex flex-col"><span class="font-title-lg text-title-lg text-primary tracking-tight font-semibold leading-none">SIDANG SIMULATOR</span><span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mt-1">LATIHAN MANDIRI &amp; UJI ARGUMEN</span></div><div class="h-6 w-px bg-surface-container-high hidden md:block"></div><nav class="hidden md:flex items-center space-x-space-md" data-active-classes="text-primary border-b-2 border-primary-container font-semibold"><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-space-sm" data-path="beranda" href="#">Beranda</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-space-sm" data-path="profil-penelitian" href="#">Profil Penelitian</a><a aria-current="page" class="transition-colors py-space-sm text-primary border-b-2 border-primary-container font-semibold" data-path="daftar-kelemahan" href="#">Daftar Kelemahan</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors py-space-sm" data-path="sesi-latihan" href="#">Sesi Latihan</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex flex-col text-right"><span class="font-label-sm text-label-sm text-on-surface font-medium">Ruang Pribadi</span><span class="font-label-sm text-label-sm text-on-surface-variant">1 Pengguna</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-[calc(100vh-5rem)]"><div class="max-w-7xl mx-auto px-margin py-space-lg"><div class="flex flex-col w-full pb-space-xl">
+<!-- Top Academic Metadata Bar & Eyebrow -->
+<div class="w-full flex flex-col md:flex-row md:items-end justify-between gap-space-md pb-space-lg mb-space-lg bg-surface-container-low p-space-lg rounded-none">
+<div class="flex flex-col space-y-space-xs max-w-3xl">
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">04. PERBAIKAN BERKELANJUTAN / DAFTAR KELEMAHAN</span>
+<span class="text-on-surface-variant font-label-sm text-label-sm">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">KORPUS REVISI DISERTASI</span>
+</div>
+<h1 class="font-display-lg text-headline-lg text-primary tracking-tight font-medium leading-tight">
+        Daftar Kelemahan &amp; Pelacakan Argumen
+      </h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+        Pelajari bukti temuan penguji, catat tindak lanjut metodologis, lalu bandingkan evolusi jawaban antar putaran.
+      </p>
+</div>
+<!-- Active Research Dossier Selector & Primary Action -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md self-start md:self-end w-full md:w-auto">
+<div class="flex flex-col text-left md:text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Fokus Naskah Aktif</span>
+<div class="flex items-center gap-space-xs text-primary font-label-lg text-label-lg font-medium cursor-pointer hover:text-secondary transition-colors">
+<span class="truncate max-w-[280px]">Pengembangan dan Evaluasi Antarmuka Dashboard DIVA...</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<a class="inline-flex items-center justify-center gap-space-xs bg-primary text-on-primary font-label-lg text-label-lg px-space-lg py-space-sm hover:bg-primary-container transition-colors focus:ring-1 focus:ring-primary" href="#">
+<span>Latih Kembali (3 Dipilih)</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Operational Header Telemetry strip -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md mb-space-xl p-space-md bg-surface-container-lowest">
+<div class="flex flex-col justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Status Pelatihan</span>
+<div class="mt-space-sm flex items-baseline gap-space-xs">
+<span class="font-title-lg text-headline-sm font-semibold text-primary">3</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">dari 10 kelemahan ditandai</span>
+</div>
+<div class="w-full bg-surface-container-high h-1 mt-space-sm">
+<div class="bg-secondary h-1" style="width: 30%"></div>
+</div>
+</div>
+<div class="flex flex-col justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Distribusi Kategori</span>
+<div class="mt-space-sm flex flex-wrap gap-1">
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-surface-container-high text-on-surface">Pendahuluan (4)</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-surface-container-high text-on-surface">Metodologi (4)</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 bg-surface-container-high text-on-surface">Ruang Lingkup (2)</span>
+</div>
+</div>
+<div class="flex flex-col justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Kesiapan Rebuttal</span>
+<div class="mt-space-sm flex items-baseline gap-space-xs">
+<span class="font-title-lg text-headline-sm font-semibold text-secondary">65%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">argumen telah divalidasi</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1">2 catatan menanti verifikasi</span>
+</div>
+<div class="flex flex-col justify-between p-space-sm bg-surface-container-low">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Arsip Transkrip Penguji</span>
+<div class="mt-space-sm flex items-center gap-space-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
+<span>Sidang Pra-Kualifikasi 02</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Penguji: Prof. Dr. Hendra &amp; Dr. Sri</span>
+</div>
+</div>
+<!-- Primary Tab Switches (Paper Monograph Index Style) -->
+<div class="flex items-center gap-space-sm mb-space-lg bg-surface-container-low p-1 w-fit">
+<button class="px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 bg-surface-container-lowest text-primary font-semibold shadow-sm" id="tab-findings" onclick="switchAcademicTab('findings')">
+      Daftar Temuan Kelemahan (10)
+    </button>
+<button class="px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 text-on-surface-variant hover:text-on-surface" id="tab-comparison" onclick="switchAcademicTab('comparison')">
+      Komparasi Jawaban (Evolusi Argumen)
+    </button>
+</div>
+<!-- VIEW 1: DAFTAR TEMUAN KELEMAHAN -->
+<div class="flex flex-col w-full space-y-space-lg" id="view-findings">
+<!-- Filter bar -->
+<div class="flex flex-wrap items-center justify-between gap-space-md bg-surface-container-lowest p-space-md">
+<div class="flex flex-wrap items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mr-space-xs">Filter Kategori:</span>
+<button class="px-space-sm py-0.5 bg-primary text-on-primary font-label-sm text-label-sm">Semua</button>
+<button class="px-space-sm py-0.5 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm">Pendahuluan (4)</button>
+<button class="px-space-sm py-0.5 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm">Metodologi (4)</button>
+<button class="px-space-sm py-0.5 bg-surface-container text-on-surface hover:bg-surface-container-high font-label-sm text-label-sm">Ruang Lingkup (2)</button>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Urutkan:</span>
+<select class="bg-surface-container-low text-on-surface font-label-sm text-label-sm py-1 px-space-sm rounded-none focus:outline-none">
+<option>Tingkat Prioritas (Tinggi → Rendah)</option>
+<option>Kronologis Sesi</option>
+<option>Status Revisi</option>
+</select>
+</div>
+</div>
+<!-- ITEM 1 (Active, Expanded, Checked) -->
+<div class="bg-surface-container-lowest p-space-lg transition-all">
+<div class="flex items-start justify-between gap-space-md mb-space-md">
+<div class="flex items-start gap-space-md">
+<input checked="" class="mt-1 w-4 h-4 text-primary bg-surface-container-low rounded-none focus:ring-0 focus:outline-none cursor-pointer" type="checkbox"/>
+<div class="flex flex-col">
+<div class="flex flex-wrap items-center gap-space-sm mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-surface-container-high text-on-surface">Kategori: Pendahuluan</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-error-container text-on-error-container font-semibold">Status: Perlu dilatih</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Temuan #DEF-01 • Penguji I</span>
+</div>
+<h2 class="font-title-lg text-headline-sm text-primary font-semibold">
+              Pertanyaan utama belum dijawab
+            </h2>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">priority_high</span> Prioritas Tinggi
+          </span>
+</div>
+</div>
+<!-- Dossier Evidence Grid (Editorial Asymmetric Register) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg pt-space-sm">
+<!-- Left: Citation of old statement & Examiner finding -->
+<div class="lg:col-span-7 flex flex-col space-y-space-md bg-surface-container-low p-space-md">
+<!-- Kutipan Jawaban Lama -->
+<div>
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Bukti Transkrip: Jawaban Putaran Lalu</span>
+<span class="font-label-sm text-label-sm text-error">Transkrip Sesi 01 • 04:12 WIB</span>
+</div>
+<div class="bg-surface-container-lowest p-space-md border-l-2 border-error">
+<p class="font-body-lg text-body-md text-error italic">
+                “test”
+              </p>
+<div class="mt-space-xs text-right">
+<span class="font-label-sm text-label-sm text-on-surface-variant italic">— Rekaman tanggapan lisan kandidat (durasi respon: 2 detik)</span>
+</div>
+</div>
+</div>
+<!-- Alasan & Ulasan Penguji -->
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-space-xs">Catatan &amp; Evaluasi Penguji</span>
+<div class="bg-surface-container-lowest p-space-md">
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+                Jawaban tidak menjelaskan siapa yang akan dilibatkan, apa kriteria pemilihan informan, dan bagaimana data kebutuhan antarmuka Dashboard DIVA diverifikasi. Penguji menuntut justifikasi empiris keterwakilan stakeholder kehutanan.
+              </p>
+</div>
+</div>
+<!-- Tindakan Perbaikan Terstruktur -->
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold block mb-space-xs">Rekomendasi Tindak Lanjut Metodologis</span>
+<div class="bg-secondary-container p-space-md text-on-secondary-fixed">
+<p class="font-body-md text-body-md leading-relaxed font-normal">
+                Jelaskan rencana secara berurutan: menentukan calon pengguna berdasarkan kriteria keahlian GIS dan analisis spasial, menyebutkan instansi mitra (Dinas Kehutanan Provinsi), serta mendeskripsikan instrumen panduan wawancara mendalam yang diadaptasi dari framework ISO 9241-11.
+              </p>
+</div>
+</div>
+</div>
+<!-- Right: Action form & Practitioner personal rebuttal ledger -->
+<div class="lg:col-span-5 flex flex-col justify-between bg-surface-container-lowest p-space-md">
+<div class="flex flex-col space-y-space-md">
+<div class="flex items-center justify-between pb-space-xs bg-surface-container-low px-space-sm py-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Tindak Lanjut Mandiri</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Pembaruan Dokumen</span>
+</div>
+<!-- Form Status Dropdown -->
+<div class="flex flex-col space-y-1">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Status Penanganan</label>
+<select class="bg-surface-container-low text-on-surface font-label-md text-label-md p-space-sm rounded-none focus:outline-none focus:ring-1 focus:ring-primary">
+<option selected="">Perlu dilatih</option>
+<option>Sudah direvisi</option>
+<option>Siap diuji</option>
+</select>
+</div>
+<!-- Form Textarea Notes -->
+<div class="flex flex-col space-y-1">
+<div class="flex items-center justify-between">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Catatan Tindak Lanjut Mandiri</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Draft #2</span>
+</div>
+<textarea class="w-full bg-surface-container-low text-on-surface font-body-sm text-body-sm p-space-sm rounded-none focus:outline-none focus:bg-surface-container-lowest focus:ring-1 focus:ring-primary leading-relaxed resize-none" placeholder="Tuliskan poin kunci atau kerangka argumen baru di sini..." rows="5">Menyusun 3 poin kunci: (1) Unit analisis (Dinas Kehutanan Jawa Barat &amp; Walhi), (2) Instrumen eksplorasi task-analysis 5 langkah, (3) Matriks triangulasi data kualitatif.</textarea>
+</div>
+</div>
+<div class="pt-space-md flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Disimpan: Hari ini, 10:14 WIB</span>
+<button class="bg-primary text-on-primary font-label-sm text-label-sm px-space-md py-space-sm hover:bg-primary-container transition-colors">
+              Simpan Status &amp; Catatan
+            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- ITEM 2 (Dense, Collapsed style) -->
+<div class="bg-surface-container-lowest p-space-lg transition-all">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<input checked="" class="mt-1 w-4 h-4 text-primary bg-surface-container-low rounded-none focus:ring-0 focus:outline-none cursor-pointer" type="checkbox"/>
+<div class="flex flex-col">
+<div class="flex flex-wrap items-center gap-space-sm mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-surface-container-high text-on-surface">Kategori: Ruang Lingkup</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-secondary-container text-on-secondary-fixed font-semibold">Status: Sudah direvisi</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Temuan #DEF-02 • Penguji II</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-primary font-semibold">
+              Pengguna sasaran belum dibatasi secara operasional
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-1">
+              Penguji mempersoalkan klaim bahwa dashboard dirancang untuk “semua pengambil kebijakan lingkungan” tanpa diferensiasi profil teknis.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-md self-end md:self-center shrink-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Revisi Putaran 02</span>
+<button class="px-space-md py-space-xs font-label-sm text-label-sm bg-surface-container text-on-surface hover:bg-surface-container-high">
+            Buka Detail &amp; Form
+          </button>
+</div>
+</div>
+</div>
+<!-- ITEM 3 (Dense, Collapsed style) -->
+<div class="bg-surface-container-lowest p-space-lg transition-all">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<input checked="" class="mt-1 w-4 h-4 text-primary bg-surface-container-low rounded-none focus:ring-0 focus:outline-none cursor-pointer" type="checkbox"/>
+<div class="flex flex-col">
+<div class="flex flex-wrap items-center gap-space-sm mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-surface-container-high text-on-surface">Kategori: Metodologi</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider px-2 py-0.5 bg-error-container text-on-error-container font-semibold">Status: Perlu dilatih</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Temuan #DEF-03 • Penguji I</span>
+</div>
+<h2 class="font-title-lg text-title-lg text-primary font-semibold">
+              Cara penggalian kebutuhan belum dijawab
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 line-clamp-1">
+              Prosedur elisitasi kebutuhan sistem tidak dijelaskan secara runut apakah menggunakan observasi kontekstual atau kuesioner terstandar.
+            </p>
+</div>
+</div>
+<div class="flex items-center gap-space-md self-end md:self-center shrink-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Draft revisi belum lengkap</span>
+<button class="px-space-md py-space-xs font-label-sm text-label-sm bg-surface-container text-on-surface hover:bg-surface-container-high">
+            Buka Detail &amp; Form
+          </button>
+</div>
+</div>
+</div>
+</div>
+<!-- VIEW 2: KOMPARASI JAWABAN (EVOLUSI ARGUMEN) -->
+<div class="flex flex-col w-full space-y-space-lg" id="view-comparison">
+<!-- Comparison Context Intro Card -->
+<div class="bg-surface-container-lowest p-space-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md mb-space-md bg-surface-container-low p-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Bukti Komparasi Berdampingan</span>
+<h2 class="font-title-lg text-headline-sm text-primary font-semibold">
+            Kasus Uji: Definisi Pengguna Sasaran &amp; Elisitasi Kebutuhan (DIVA)
+          </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Membuktikan resolusi kelemahan dari respon impulsif menuju argumen akademik terstruktur.
+          </p>
+</div>
+<div class="flex items-center gap-space-sm shrink-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Sesi Pembanding:</span>
+<span class="font-label-sm text-label-sm font-semibold bg-surface-container-highest px-2 py-1 text-primary">Putaran 01 vs Putaran 02</span>
+</div>
+</div>
+<!-- Side-by-side Dual Register (Editorial Legal Monograph) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Left Pane: Old Answer -->
+<div class="flex flex-col bg-surface-container-low p-space-lg">
+<div class="flex items-center justify-between pb-space-sm mb-space-md bg-surface-container p-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 bg-error"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Jawaban Putaran 01 (Sebelumnya)</span>
+</div>
+<span class="font-label-sm text-label-sm text-error bg-error-container px-2 py-0.5">Skor Argumen: 12 / 100</span>
+</div>
+<!-- Transcript quotation with red accent line -->
+<div class="bg-surface-container-lowest p-space-md border-l-2 border-error mb-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block mb-1">Transkrip Lisan Langsung:</span>
+<p class="font-body-lg text-body-lg text-error italic">
+              “test”
+            </p>
+</div>
+<!-- Marginal critique note -->
+<div class="p-space-md bg-surface-container mb-space-md">
+<div class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-[18px]">report_problem</span>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error font-semibold block">Catatan Margin Penguji:</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Tidak ada metodologi, belum terarah, dan gagal mengontekstualisasikan instrumen terhadap domain SIG kehutanan. Jawaban dinilai gugur secara substansi.
+                </p>
+</div>
+</div>
+</div>
+<!-- Breakdown telemetry -->
+<div class="mt-auto pt-space-md text-on-surface-variant text-label-sm font-label-sm flex justify-between bg-surface-container-highest p-space-xs">
+<span>Durasi Pernyataan: 2 detik</span>
+<span>Referensi Literatur: 0</span>
+</div>
+</div>
+<!-- Right Pane: New Answer (Revisi) -->
+<div class="flex flex-col bg-secondary-container p-space-lg">
+<div class="flex items-center justify-between pb-space-sm mb-space-md bg-surface-container-lowest p-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 bg-secondary"></span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-secondary-fixed font-semibold">Jawaban Putaran 02 (Revisi / Jawaban Baru)</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-container-lowest px-2 py-0.5 font-semibold">Skor Argumen: 88 / 100</span>
+</div>
+<!-- Full revised statement quote with dark green line -->
+<div class="bg-surface-container-lowest p-space-md border-l-2 border-secondary mb-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-secondary-container block mb-1">Pernyataan Pertahanan Akademik:</span>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+              “Pengguna sasaran DIVA dibagi ke dalam dua kelompok primer: analis data kehutanan di dinas lingkungan hidup dan pegiat konservasi independen. Kebutuhan digali melalui <em class="font-semibold text-primary">semi-structured interview</em> dengan 6 informan kunci menggunakan kerangka kerja ISO 9241-11 untuk memastikan cakupan efektivitas, efisiensi, dan kepuasan pengguna spasial terpenuhi.”
+            </p>
+</div>
+<!-- Marginal affirmation note -->
+<div class="p-space-md bg-surface-container-lowest mb-space-md">
+<div class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold block">Anotasi Hasil Evaluasi:</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Memenuhi kriteria metodologis &amp; jelas. Menjawab relasi antara spesifikasi persona pengguna dengan instrumen baku. Tidak menyisakan celah ambiguitas operasional.
+                </p>
+</div>
+</div>
+</div>
+<!-- Breakdown telemetry -->
+<div class="mt-auto pt-space-md text-on-secondary-container text-label-sm font-label-sm flex justify-between bg-surface-container-lowest p-space-xs">
+<span>Durasi Pernyataan: 38 detik</span>
+<span>Referensi Terintegrasi: ISO 9241-11</span>
+</div>
+</div>
+</div>
+<!-- Action footer inside comparison -->
+<div class="mt-space-lg pt-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container-low p-space-md">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">history_edu</span>
+<span class="font-body-sm text-body-sm text-on-surface">Evolusi ini telah divalidasi ke dalam Dokumen Perbaikan Disertasi Bab 3 (Halaman 47).</span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="px-space-md py-space-sm bg-surface-container-lowest text-primary font-label-sm text-label-sm hover:bg-surface-container transition-colors">
+            Ekspor Transkrip Komparasi (PDF)
+          </button>
+<button class="px-space-md py-space-sm bg-primary text-on-primary font-label-sm text-label-sm hover:bg-primary-container transition-colors">
+            Tandai Selesai Diperbaiki
+          </button>
+</div>
+</div>
+</div>
+<!-- Comparative Corpus Visual Reference Module -->
+<div class="bg-surface-container-lowest p-space-lg">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Tangkapan Riwayat Pelacakan</span>
+<h3 class="font-title-lg text-title-lg text-primary font-semibold">Dokumentasi Evaluator Sidang</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Arsip ID: #IMG-5076</span>
+</div>
+<!-- Embedded image referencing requested placeholder DATA:IMAGE:IMAGE_5 -->
+<div class="overflow-hidden bg-surface-container-low max-h-96 relative flex items-center justify-center">
+<img alt="Dokumentasi pelacakan kelemahan disertasi dan riwayat transkrip tanya jawab" class="w-full object-cover object-top filter grayscale contrast-125 opacity-90 hover:opacity-100 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAChQE7KmRaQ1mJXSGOkr60GCnImW2Yd1nNHX3uU_QAkpBzhvHNQMlQi4B-jWozxv3g7JLXqv_UY8p_gqaQ1usFkN9ijG9jSQ3xA9F1EXrzoS5hZ_GhpARCBPuDvwP0VcpStdxqIxDbgTAuAqjuRz6D4MwOeaOr7TMm8wvbV-xUGYWZRzDuSaUG8Bmlghvu47JemjpL8f-ouwmHc47Aed2fD395wtGHEA6zQZFGcqRRm1GLRfNW19W6epjS8q4GeDiVw"/>
+<div class="absolute bottom-0 inset-x-0 bg-primary/80 text-on-primary p-space-sm flex items-center justify-between text-label-sm font-label-sm">
+<span>Tangkapan Layar Arsip Sesi: 127.0.0.1:3000/?halaman=kelemahan</span>
+<span>Resolusi Sumber: 1208 × 5076 px</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Global Affirmation / Academic Footer Note -->
+<div class="mt-space-xl p-space-md bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-md text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+<span>Komite Penguji mengalokasikan 14 hari kerja untuk seluruh siklus perbaikan kelemahan sebelum penetapan Yudisium.</span>
+</div>
+<div class="flex items-center gap-space-md">
+<a class="underline hover:text-primary" href="#">Panduan Rebuttal Disertasi</a>
+<a class="underline hover:text-primary" href="#">Matriks Revisi Bab 1-5</a>
+</div>
+</div>
+</div>
+<script>
+  function switchAcademicTab(tabName) {
+    const findingsView = document.getElementById('view-findings');
+    const comparisonView = document.getElementById('view-comparison');
+    const tabFindingsBtn = document.getElementById('tab-findings');
+    const tabComparisonBtn = document.getElementById('tab-comparison');
+
+    if (tabName === 'findings') {
+      findingsView.classList.remove('hidden');
+      comparisonView.classList.add('hidden');
+      
+      tabFindingsBtn.className = 'px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 bg-surface-container-lowest text-primary font-semibold shadow-sm';
+      tabComparisonBtn.className = 'px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 text-on-surface-variant hover:text-on-surface';
+    } else {
+      findingsView.classList.add('hidden');
+      comparisonView.classList.remove('hidden');
+      
+      tabComparisonBtn.className = 'px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 bg-surface-container-lowest text-primary font-semibold shadow-sm';
+      tabFindingsBtn.className = 'px-space-lg py-space-sm font-label-lg text-label-lg transition-all duration-150 text-on-surface-variant hover:text-on-surface';
+    }
+  }
+
+  // Initialize with findings tab visible
+  document.addEventListener('DOMContentLoaded', function() {
+    switchAcademicTab('findings');
+  });
+</script></div></main><footer class="w-full bg-surface-container-low border-t border-surface-container-high py-space-lg"><div class="max-w-7xl mx-auto px-margin flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-md text-label-md text-on-surface-variant"><span>Sidang Simulator — Modul Evaluasi &amp; Pertahanan Disertasi</span><span class="font-label-sm text-label-sm uppercase tracking-wider">Transkrip Akademik Digital</span></div></footer></body></html>

@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sidang Simulator — Ruang Latihan Akademik Terarah</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "paper": "#F8F7F2",
+            "paper-subtle": "#F2F1EA",
+            "ink": "#181A19",
+            "ink-muted": "#5F6360",
+            "academic-navy": "#1B2D45",
+            "academic-navy-hover": "#142236",
+            "rule-border": "#E2E0D8",
+            "rule-border-dark": "#D0CEBF",
+            "amber-ink": "#874D00",
+            "amber-tint": "#FAF4E8",
+            "error-ink": "#A81E1E",
+            "error-tint": "#FCF0F0"
+          },
+          fontFamily: {
+            serif: ["Newsreader", "Georgia", "serif"],
+            sans: ["Inter", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
+            mono: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body {
+      background-color: #F8F7F2;
+      color: #181A19;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection {
+      background: #1B2D45;
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body class="min-h-screen font-sans flex flex-col">
+<!-- 1. TOP NAVIGATION (Slim, Quiet, 56px height, Paper Tone) -->
+<header class="sticky top-0 z-50 h-14 bg-[#FBFBFA]/95 backdrop-blur-sm border-b border-rule-border flex items-center justify-between px-6 lg:px-10">
+<!-- Left: Brand mark with Small Caps / Subtitle -->
+<div class="flex items-center gap-3">
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 bg-academic-navy inline-block rounded-none"></span>
+<span class="font-serif text-[17px] font-semibold text-ink tracking-tight uppercase">Sidang Simulator</span>
+</div>
+<span class="text-[10px] tracking-wider uppercase text-ink-muted pl-4 font-mono font-medium">Latihan Mandiri &amp; Uji Argumen</span>
+</div>
+</div>
+<!-- Center: Quiet Academic Navigation Tabs -->
+<nav class="hidden md:flex items-center gap-1 text-[13px] font-medium text-ink-muted">
+<a class="px-3 py-1.5 rounded-sm hover:text-ink transition-colors" href="#">Beranda</a>
+<span class="text-rule-border-dark">/</span>
+<a class="px-3 py-1.5 rounded-sm hover:text-ink transition-colors" href="#">Profil Penelitian</a>
+<span class="text-rule-border-dark">/</span>
+<a class="px-3 py-1.5 rounded-sm hover:text-ink transition-colors" href="#">Daftar Kelemahan</a>
+<span class="text-rule-border-dark">/</span>
+<a class="px-3 py-1.5 rounded-sm text-academic-navy font-semibold bg-white border border-rule-border shadow-xs" href="#">Sesi Latihan (Aktif)</a>
+</nav>
+<!-- Right: Session Status & Student Identity -->
+<div class="flex items-center gap-4 text-xs font-medium">
+<div class="hidden sm:flex items-center gap-2 pl-3 py-1 pr-3 border-l border-rule-border text-ink-muted">
+<span class="w-2 h-2 rounded-full bg-emerald-700 animate-pulse"></span>
+<span class="text-[12px] font-mono">Mode Latihan • Bab II &amp; III</span>
+</div>
+<div class="flex items-center gap-2 bg-white px-2.5 py-1 border border-rule-border text-ink">
+<span class="material-symbols-outlined text-[15px] text-academic-navy">person</span>
+<span class="text-[12px] font-semibold">Ruang Latihan</span>
+</div>
+</div>
+</header>
+<!-- 3. TOP METADATA ROW (Non-intrusive Academic Ledger) -->
+<div class="bg-[#F4F3ED] border-b border-rule-border">
+<div class="max-w-[1140px] mx-auto px-6 lg:px-8 py-3.5 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+<div class="flex items-start md:items-center gap-2">
+<span class="font-serif italic font-medium text-ink-muted text-sm shrink-0">Naskah:</span>
+<h2 class="font-sans font-medium text-ink text-[13px] leading-snug">
+          Pengembangan dan Evaluasi Antarmuka Dashboard DIVA untuk Eksplorasi Perubahan Tutupan Lahan dan Karhutla di Kalimantan Tengah
+        </h2>
+<span class="shrink-0 text-[10px] font-mono uppercase tracking-wider text-ink-muted bg-paper-subtle px-1.5 py-0.5 border border-rule-border">
+          [Data ilustratif]
+        </span>
+</div>
+<div class="flex items-center gap-3 shrink-0 self-end md:self-auto text-ink-muted">
+<div class="flex items-center gap-2 text-[11px] font-mono">
+<span class="text-ink font-semibold">Pertanyaan 2 dari 5</span>
+<span class="text-rule-border-dark">•</span>
+<span class="text-amber-ink font-semibold bg-amber-tint px-2 py-0.5 border border-[#E8DAC2]">Susulan Aktif</span>
+</div>
+<span class="text-rule-border-dark hidden md:inline">|</span>
+<button class="flex items-center gap-1 hover:text-ink transition-colors font-sans text-[11px] text-ink-muted" type="button">
+<span class="material-symbols-outlined text-[14px]">sync</span>
+<span>Muat ulang status</span>
+</button>
+</div>
+</div>
+</div>
+<!-- MAIN SCHOLARLY WORKSPACE CANVAS -->
+<main class="flex-1 max-w-[1140px] w-full mx-auto px-6 lg:px-8 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+<!-- LEFT COLUMN: Primary Transcript & Active Writing Desk (~68% width, col-span-8) -->
+<div class="lg:col-span-8 flex flex-col gap-10">
+<!-- SECTION: Numbered Transcript / Previous Exchange (Entry 01) -->
+<article class="bg-white border border-rule-border p-6 md:p-8 flex flex-col gap-6 shadow-xs relative">
+<!-- Entry Label & Number -->
+<div class="flex items-center justify-between pb-3 border-b border-rule-border text-xs">
+<div class="flex items-center gap-2 font-mono text-ink-muted">
+<span class="font-bold text-ink">01.</span>
+<span class="uppercase tracking-wider">Pertanyaan Utama • Bab Pendahuluan &amp; Pengguna</span>
+</div>
+<span class="text-[11px] font-mono text-ink-muted">Arsip Putaran 1</span>
+</div>
+<!-- Examiner's Stated Question -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono uppercase tracking-wider text-ink-muted">Pertanyaan Penguji:</span>
+<blockquote class="font-serif text-[19px] md:text-[20px] text-ink leading-[1.6] font-normal pl-4 border-l-2 border-rule-border-dark">
+              “Dalam profil penelitian Anda, pengguna sasaran DIVA masih perlu ditetapkan. Bagaimana Anda akan menentukan kelompok pengguna sasaran dan menggali kebutuhan mereka sebagai dasar penetapan fitur prioritas antarmuka?”
+            </blockquote>
+</div>
+<!-- Student's Prior Submitted Response -->
+<div class="bg-paper-subtle border border-rule-border p-4 flex flex-col gap-2">
+<div class="flex items-center justify-between text-[11px] font-mono text-ink-muted">
+<span class="font-semibold text-ink">Jawaban Mahasiswa Tercatat</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-academic-navy">schedule</span>
+                10:14 WIB
+              </span>
+</div>
+<p class="font-mono text-sm text-ink bg-white p-3 border border-rule-border leading-relaxed">
+              test
+            </p>
+</div>
+<!-- Mobile Margin Note Fallback (Visible on Small Screens only) -->
+<div class="lg:hidden bg-paper border-l-2 border-amber-ink p-4 text-xs flex flex-col gap-3">
+<span class="font-mono font-bold uppercase tracking-wider text-amber-ink text-[11px]">Catatan Marjin Penguji</span>
+<div>
+<span class="font-semibold text-error-ink block mb-1">Temuan Utama: Belum menjawab penentuan pengguna dan kebutuhan fitur</span>
+<p class="text-ink leading-relaxed">Jawaban tidak memberikan uraian tentang cara menentukan pengguna sasaran dan menggali kebutuhan, padahal profil menyatakan bahwa pengguna sasaran dan fitur prioritas masih perlu ditetapkan.</p>
+</div>
+</div>
+</article>
+<!-- SECTION: Active Question & Scholarly Writing Desk (Focal Point) -->
+<article class="bg-white border-2 border-academic-navy p-6 md:p-8 flex flex-col gap-6 shadow-sm relative">
+<!-- Active Header Indicator -->
+<div class="flex items-center justify-between pb-3 border-b border-rule-border">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 bg-academic-navy text-white text-[11px] font-mono font-semibold">02</span>
+<span class="font-mono text-xs font-semibold text-ink uppercase tracking-wider">
+                Pertanyaan Susulan (Klarifikasi &amp; Argumentasi)
+              </span>
+</div>
+<span class="text-[11px] font-mono text-amber-ink font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-ping"></span>
+              Menuntut Pembelaan
+            </span>
+</div>
+<!-- Examiner's Active Prompt in Academic Serif -->
+<div class="flex flex-col gap-3">
+<h1 class="font-serif text-[24px] md:text-[27px] text-ink leading-[1.38] font-normal">
+              “Apakah ‘test’ hanya pesan uji, atau Anda ingin menjelaskan rencana penentuan pengguna sasaran dan penggalian kebutuhan fitur DIVA?”
+            </h1>
+<p class="font-sans text-[13px] text-ink-muted leading-relaxed">
+              Berikan pembelaan substantif. Jika jawaban sebelumnya adalah uji sambungan, sampaikan komitmen metode perancangan antarmuka yang Anda tetapkan dalam proposal.
+            </p>
+</div>
+<!-- Writing Desk Workspace Form -->
+<div class="flex flex-col gap-3 pt-2">
+<div class="flex items-baseline justify-between">
+<label class="text-xs font-mono font-semibold uppercase tracking-wider text-ink flex items-center gap-1.5" for="studentResponseInput">
+<span class="material-symbols-outlined text-[16px] text-academic-navy">border_color</span>
+                Tuliskan Jawaban Akademik Anda
+              </label>
+<span class="text-[11px] text-ink-muted italic hidden sm:inline">
+                Jelaskan tahapan terukur, rujukan metodologi, dan bukti pendukung.
+              </span>
+</div>
+<!-- UI State Preview Bar (Academic Compact Controller) -->
+<div class="flex flex-wrap items-center gap-1.5 p-1.5 bg-paper-subtle border border-rule-border text-[11px] font-mono">
+<span class="px-2 text-ink-muted font-medium">Uji Status UI:</span>
+<button class="state-tab px-2.5 py-1 bg-white text-academic-navy font-semibold border border-rule-border-dark" data-state="default" onclick="setSessionState('default')" type="button">Normal (Menunggu)</button>
+<button class="state-tab px-2.5 py-1 text-ink-muted hover:text-ink" data-state="processing" onclick="setSessionState('processing')" type="button">AI Memproses...</button>
+<button class="state-tab px-2.5 py-1 text-ink-muted hover:text-ink" data-state="error" onclick="setSessionState('error')" type="button">Koneksi Putus</button>
+<button class="state-tab px-2.5 py-1 text-ink-muted hover:text-ink" data-state="submitting" onclick="setSessionState('submitting')" type="button">Mengirim...</button>
+</div>
+<!-- Normal Writing Desk State -->
+<div class="flex flex-col gap-3" id="stateNormal">
+<div class="relative">
+<textarea class="w-full p-4 font-sans text-[14px] text-ink bg-white border border-rule-border-dark rounded-none focus:outline-none focus:border-academic-navy focus:ring-0 leading-relaxed placeholder:text-ink-muted/60 resize-y" id="studentResponseInput" oninput="handleTextareaInput(this)" placeholder="Tuliskan penjelasan dan metodologi Anda di sini... Jelaskan tahapan identifikasi stakeholder (misal: DLH Kalimantan Tengah, pengelola data GIS), instrumen wawancara terstruktur, serta bagaimana temuan tersebut dipetakan ke wireframe antarmuka DIVA." rows="9"></textarea>
+</div>
+<!-- Character Count & Autosave Ledger -->
+<div class="flex flex-wrap items-center justify-between gap-2 text-xs text-ink-muted pt-1 border-b border-rule-border pb-3">
+<div class="flex items-center gap-1.5 font-mono text-[11px]">
+<span class="material-symbols-outlined text-[15px] text-academic-navy">save</span>
+<span>Tersimpan otomatis di penyimpanan lokal</span>
+</div>
+<div class="font-mono text-[12px] font-medium" id="charCounter">
+                  0 / 6.000 karakter
+                </div>
+</div>
+<!-- Action Row Directly Beneath Textarea -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-2 bg-paper-subtle hover:bg-rule-border/60 text-ink text-xs font-medium border border-rule-border transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">menu_book</span>
+<span>Kutipkan Bab Skripsi</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-2 bg-paper-subtle hover:bg-rule-border/60 text-ink text-xs font-medium border border-rule-border transition-colors" type="button">
+<span class="material-symbols-outlined text-[15px]">mic</span>
+<span>Transkrip Suara</span>
+</button>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-academic-navy hover:bg-academic-navy-hover text-white text-xs font-semibold tracking-wide uppercase transition-all shadow-xs" id="btnKirim" onclick="setSessionState('processing')" type="button">
+<span>Kirim Jawaban</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Simulated State: AI Memproses (Subtle academic pulse) -->
+<div class="hidden flex-col gap-4 p-8 bg-paper-subtle border border-rule-border items-center text-center" id="stateProcessing">
+<div class="w-10 h-10 border-2 border-academic-navy border-t-transparent animate-spin"></div>
+<div class="flex flex-col gap-1 max-w-md">
+<h3 class="font-serif text-[18px] text-ink font-medium">Memproses Analisis Jawaban &amp; Rubrik...</h3>
+<p class="font-sans text-xs text-ink-muted leading-relaxed">
+                  Menelaah koherensi argumen naskah dan keterkaitan metode penetapan pengguna dengan proposal. Tidak ada estimasi artifisial, sistem memverifikasi data.
+                </p>
+</div>
+</div>
+<!-- Simulated State: Koneksi Putus -->
+<div class="hidden flex-col gap-3 p-5 bg-error-tint border border-red-200 text-ink" id="stateError">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-error-ink text-[20px] mt-0.5">wifi_off</span>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold font-mono uppercase tracking-wide text-error-ink">Koneksi Terputus ke Server Evaluasi</span>
+<p class="text-xs text-ink leading-relaxed">
+                    Jawaban naskah Anda tetap tersimpan utuh di peramban lokal. Anda dapat mencoba mengirim kembali atau menyalin draf teks untuk cadangan pribadi.
+                  </p>
+</div>
+</div>
+<div class="flex items-center gap-2 pl-7 pt-2">
+<button class="px-3.5 py-1.5 bg-error-ink text-white font-sans text-xs font-semibold" onclick="setSessionState('processing')" type="button">
+                  Coba Lagi
+                </button>
+<button class="px-3 py-1.5 bg-white border border-rule-border text-ink font-sans text-xs hover:bg-paper" onclick="salinDraf()" type="button">
+                  Salin Draf Naskah
+                </button>
+</div>
+</div>
+<!-- Simulated State: Mengirim (Disabled) -->
+<div class="hidden flex-col gap-2 p-6 bg-paper-subtle border border-rule-border items-center justify-center text-center" id="stateSubmitting">
+<div class="flex items-center gap-2 text-ink-muted text-xs font-mono font-medium">
+<span class="w-3.5 h-3.5 border-2 border-academic-navy border-t-transparent animate-spin"></span>
+<span>Mengunggah tanggapan ke lembar naskah penguji...</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- RIGHT MARGIN COLUMN: Scholarly Margin Notes, Rubric & Context (~32% width, col-span-4) -->
+<aside class="lg:col-span-4 flex flex-col gap-6">
+<!-- Margin Note Card 1: Evaluation of Entry 01 (Authentic Scholarly Margin Note) -->
+<section class="bg-white border-l-2 border-rule-border-dark pl-5 pr-4 py-4 flex flex-col gap-4 text-xs">
+<div class="flex items-center justify-between pb-2 border-b border-rule-border">
+<span class="font-mono text-[10px] uppercase tracking-wider text-ink-muted font-semibold">
+              Catatan Marjin • Putaran 01
+            </span>
+<span class="font-mono text-[10px] text-amber-ink font-semibold">Evaluasi Penguji</span>
+</div>
+<!-- Finding -->
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Temuan Pokok:</span>
+<p class="font-sans font-semibold text-error-ink leading-snug">
+              Belum menjawab penentuan pengguna dan kebutuhan fitur
+            </p>
+</div>
+<!-- Quotation Evidence -->
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Kutipan Jawaban Mahasiswa:</span>
+<div class="p-2 bg-paper-subtle border-l border-rule-border-dark font-mono text-[11px] text-ink italic">
+              “test”
+            </div>
+</div>
+<!-- Scholarly Review -->
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-mono uppercase tracking-wider text-ink-muted">Ulasan Akademik Penguji:</span>
+<p class="text-ink leading-relaxed font-serif text-[13px]">
+              Jawaban tidak memberikan uraian tentang cara menentukan pengguna sasaran dan menggali kebutuhan, padahal profil menyatakan bahwa pengguna sasaran dan fitur prioritas masih perlu ditetapkan.
+            </p>
+</div>
+<!-- Concrete Improvement Steps -->
+<div class="flex flex-col gap-2 pt-2 border-t border-rule-border">
+<span class="text-[10px] font-mono uppercase tracking-wider text-academic-navy font-semibold">
+              Rekomendasi Tindakan Perbaikan:
+            </span>
+<ol class="flex flex-col gap-2 pl-4 list-decimal text-ink leading-relaxed">
+<li>Identifikasi calon pengguna sasaran (misal: peneliti spasial, analis GIS kehutanan, pegiat BNPB).</li>
+<li>Tetapkan kriteria pemilihan responden untuk pengujian kegunaan antarmuka.</li>
+<li>Tentukan teknik penggalian kebutuhan (misal: <em>Contextual Inquiry</em> atau <em>Semi-structured Interview</em>).</li>
+<li>Jelaskan matriks prioritas fitur (misal: MoSCoW framework) sebelum implementasi prototipe.</li>
+</ol>
+</div>
+</section>
+<!-- Margin Note Card 2: Contextual Excerpt from Student's Proposal -->
+<section class="bg-paper border border-rule-border p-4 flex flex-col gap-3 text-xs">
+<div class="flex items-center justify-between pb-2 border-b border-rule-border text-[10px] font-mono text-ink-muted">
+<span class="uppercase tracking-wider font-semibold">Konteks Naskah Skripsi</span>
+<span>Bab 1.2 • Hal. 4</span>
+</div>
+<p class="font-serif italic text-ink text-[13px] leading-relaxed">
+            “Penelitian dashboard ini membutuhkan penegasan profil pengguna akhir untuk memastikan visualisasi peta tematik karhutla berdaya guna tinggi bagi pemangku kepentingan di Kalimantan Tengah.”
+          </p>
+<div class="pt-2 border-t border-rule-border flex flex-col gap-1.5 font-mono text-[11px]">
+<div class="flex justify-between items-center text-ink-muted">
+<span>Penguasaan Metodologi:</span>
+<span class="text-error-ink font-semibold">1 / 5 (Kurang)</span>
+</div>
+<div class="flex justify-between items-center text-ink-muted">
+<span>Terminologi Ilmiah:</span>
+<span class="text-ink font-medium">Tidak terdeteksi</span>
+</div>
+</div>
+</section>
+<!-- Margin Note Card 3: Academic Practice Code of Conduct -->
+<div class="p-3 border border-rule-border text-[11px] text-ink-muted leading-relaxed">
+<p class="font-sans">
+<strong class="font-mono text-ink text-[10px] uppercase block mb-0.5">Panduan Penyusunan:</strong>
+            Fokuskan argumen pada landasan metode (teori HCI, sampling responden, dan justifikasi instrumen evaluasi empiris).
+          </p>
+</div>
+</aside>
+</div>
+<!-- 7. SECONDARY EXIT ACTION (Deliberately separated at page bottom with quiet line rule) -->
+<div class="mt-16 pt-6 border-t border-rule-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div class="flex items-center gap-2 text-xs text-ink-muted">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>Ingin mengakhiri latihan lebih awal? Hanya jawaban yang sudah tersimpan yang akan masuk ke riwayat latihan.</span>
+</div>
+<button class="shrink-0 px-3.5 py-1.5 bg-transparent hover:bg-rule-border/40 text-ink-muted hover:text-ink text-xs font-medium border border-rule-border transition-colors font-mono" onclick="confirmFinishEarly()" type="button">
+        Akhiri sesi lebih awal
+      </button>
+</div>
+<!-- Editorial Scholarly Disclaimer Footer -->
+<footer class="mt-8 mb-6 text-center">
+<p class="text-[11px] font-serif italic text-ink-muted max-w-xl mx-auto leading-relaxed">
+        Sidang Simulator merupakan sarana latihan naskah &amp; penalaran ilmiah terarah, bukan penilai kelulusan formal. Kerahasiaan data skripsi dan draf penelitian terjamin.
+      </p>
+</footer>
+</main>
+<!-- Interactive State Toggle & Counter Scripts -->
+<script>
+    function handleTextareaInput(el) {
+      const counter = document.getElementById('charCounter');
+      const len = el.value.length;
+      if (counter) {
+        counter.textContent = `${len.toLocaleString('id-ID')} / 6.000 karakter`;
+      }
+    }
+
+    function setSessionState(state) {
+      const states = {
+        default: document.getElementById('stateNormal'),
+        processing: document.getElementById('stateProcessing'),
+        error: document.getElementById('stateError'),
+        submitting: document.getElementById('stateSubmitting')
+      };
+
+      Object.values(states).forEach(el => {
+        if (el) el.classList.add('hidden');
+      });
+
+      if (states[state]) {
+        states[state].classList.remove('hidden');
+        if (state === 'processing' || state === 'error' || state === 'submitting') {
+          states[state].classList.add('flex');
+        }
+      }
+
+      const tabs = document.querySelectorAll('.state-tab');
+      tabs.forEach(tab => {
+        if (tab.getAttribute('data-state') === state) {
+          tab.className = 'state-tab px-2.5 py-1 bg-white text-academic-navy font-semibold border border-rule-border-dark';
+        } else {
+          tab.className = 'state-tab px-2.5 py-1 text-ink-muted hover:text-ink';
+        }
+      });
+    }
+
+    function salinDraf() {
+      const text = document.getElementById('studentResponseInput').value || 'Draf jawaban mahasiswa terkait identifikasi pemangku kepentingan dan instrumen kebutuhan pengguna DIVA.';
+      navigator.clipboard.writeText(text);
+      alert('Draf naskah berhasil disalin.');
+    }
+
+    function confirmFinishEarly() {
+      if (confirm('Apakah Anda yakin ingin menyelesaikan sesi latihan ini sekarang? Jawaban yang tersimpan akan dikompilasi ke transkrip riwayat Anda.')) {
+        alert('Sesi disimpan. Mengalihkan ke ringkasan transkrip...');
+      }
+    }
+  </script>
+</body></html>

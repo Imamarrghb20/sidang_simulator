@@ -1,10 +1,12 @@
-# PRD — Sidang Simulator
+# PRD — Urai
 
 Versi: 0.1 | Tanggal: 17 Oktober 2026 | Status: spesifikasi MVP, belum diimplementasikan
 
+Identitas aplikasi: **Urai**. Tagline: **Latih jawaban. Perkuat argumen.** Tagline ditempatkan pada header bersama, tanpa diulang dalam isi setiap halaman. Perubahan identitas tidak mengubah lingkup MVP, data, integrasi, atau riwayat migrasi. Konfigurasi domain publik menunggu alamat lengkap dari pemilik proyek.
+
 ## 1. Masalah dan tujuan
 
-Mahasiswa dapat berlatih sidang melalui chatbot umum, tetapi perlu mengatur sesi, merangkum kelemahan, dan membandingkan latihan secara manual. Sidang Simulator membantu pengguna menjalani siklus: **konteks penelitian → latihan → kelemahan dengan bukti → perbaikan → pengujian ulang**.
+Mahasiswa dapat berlatih sidang melalui chatbot umum, tetapi perlu mengatur sesi, merangkum kelemahan, dan membandingkan latihan secara manual. Urai membantu pengguna menjalani siklus: **konteks penelitian → latihan → kelemahan dengan bukti → perbaikan → pengujian ulang**.
 
 Pengguna utama adalah mahasiswa yang mempersiapkan kolokium atau sidang skripsi. MVP digunakan oleh satu pengguna pada komputer lokal. Nilai produk terletak pada kesinambungan latihan dan keterlacakan evaluasi; kualitas penilaian AI tetap perlu diperiksa pengguna.
 

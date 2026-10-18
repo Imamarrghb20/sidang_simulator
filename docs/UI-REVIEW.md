@@ -1,50 +1,66 @@
-# Tinjauan UI Sidang Simulator
+# Adaptasi Stitch — Urai
 
-Perubahan 18 Oktober 2026 mengikuti PRD dan mempertahankan API, adapter AI, skema database, riwayat, serta konfigurasi lokal. Tidak ada dependensi baru atau font jaringan.
+Perubahan 18 Oktober 2026 mengadaptasi referensi di `design/stitch/stitch_sidang_simulator_interface_redesign/stitch_sidang_simulator_interface_redesign/`, termasuk lima screenshot, HTML referensi, dan `academic_monograph_editorial/DESIGN.md`. Aturan proyek tersedia sebagai `AGENT.MD`; tidak ada `AGENTS.md`. Lingkup tetap mengikuti PRD.
 
-## Perubahan
+Identitas aplikasi kini **Urai**, dengan tagline **Latih jawaban. Perkuat argumen.** pada header bersama. Metadata browser, footer, README, PRD, serta nama package mengikuti identitas ini. Label halaman tetap berdasarkan fungsinya. Isi dan path arsip referensi Stitch dipertahankan; nama dalam arsip tidak dipakai sebagai identitas aplikasi berjalan. Folder lokal, remote Git, riwayat migrasi dan data pengguna tidak diganti.
 
-- Latar abu-abu muda, kartu putih, teks charcoal, aksen indigo, border halus dan bayangan ringan. Palet status konsisten dengan label teks.
-- Sidebar desktop dengan halaman aktif; menu mobile dibuka di alur dokumen, sehingga tidak menutupi konten. Escape menutup menu dan mengembalikan fokus. Tautan langsung ke konten memindahkan fokus ke main.
-- Beranda mengutamakan Mulai latihan, sesi yang dapat dilanjutkan, riwayat selesai, dan langkah pertama pada kondisi kosong. Metrik ringkasan dihapus.
-- Profil dikelompokkan menjadi dasar penelitian, arah/batasan, serta metode/evaluasi. Label permanen, tanda wajib, petunjuk, penghitung karakter dan error dekat field. Tidak ada profil contoh yang dimuat otomatis ke data pengguna.
-- Area sesi maksimal 780 px. Mode, progres pertanyaan utama, dan susulan ditampilkan terpisah. Pertanyaan, jawaban tersimpan, dan evaluasi memiliki hierarki yang berbeda. Textarea nyaman untuk jawaban panjang; aksi akhir sesi terpisah dari pengiriman.
-- Status proses sesuai permintaan yang berjalan; label tersimpan hanya berasal dari jawaban yang dikonfirmasi server. Draf jawaban disimpan di state aplikasi selama halaman tetap terbuka dan bertahan saat navigasi atau kegagalan. Jawaban yang telah disimpan server tetap bertahan setelah reload/restart.
-- Evaluasi disusun sebagai temuan → kutipan → alasan → tindakan perbaikan. Rincian empat dimensi dan rujukan konteks dapat dibuka. Evaluasi Simulasi tetap disaring server serta tidak dirender sebelum selesai.
-- Latih kembali menjadi aksi utama untuk kelemahan yang dipilih. Perbandingan jawaban berdampingan pada desktop dan bertumpuk di ponsel.
-- Komponen bersama ada di `src/components/ui.tsx`; formulir, beranda, sesi, kelemahan dan evaluasi dipisahkan agar lebih mudah dirawat.
+Verifikasi branding menambahkan pemeriksaan browser untuk judul tab `Urai`, metadata `application-name`, nama pada header/footer, dan satu kemunculan tagline. Enam tes browser lulus pada 360/768/1440 px (38,8 detik); lint, typecheck, 12 tes service/konfigurasi dan build Next.js langsung juga lulus. Screenshot branding desktop dan mobile telah ditinjau, tersedia di `playwright-report/urai-review/` dengan nama `beranda-desktop-1440.png` dan `beranda-mobile-360.png`. Pemeriksaan hash atas 16 berkas terlindungi memastikan file lingkungan, database, migrasi dan arsip desain tetap sama; workspace serta remote Git juga tidak berubah. Tidak ditemukan API key maupun nama lama yang tampil dalam 12 aset client yang diperiksa. Pemeriksaan domain/deployment lokal tidak menemukan konfigurasi publik; akun hosting eksternal belum diperiksa dan DNS tidak diubah.
 
-## Pemeriksaan browser
+## Koreksi alur vertikal sesi
 
-Chrome headless menjalankan aplikasi produksi lokal melalui fixture yang sudah tersedia, menggunakan database sintetis dan gateway palsu pada loopback. Alur yang sama diperiksa pada tiga ukuran:
+Grid dua kolom per giliran sebelumnya memiliki tinggi baris yang mengikuti evaluasi kanan. Saat jawaban pendek dan evaluasi panjang, ruang tersisa di kiri tetap menjadi bagian baris dan mendorong pertanyaan berikutnya ke bawah. Penyebabnya struktur grid, bukan tinggi tetap pada kartu atau jarak antar-kartu.
 
-| Lebar | Navigasi | Area sesi | Perbandingan |
+Grid dan kolom evaluasi kanan telah dihapus. Setiap artikel percakapan memuat pertanyaan, jawaban, dan evaluasi secara berurutan. Ringkasan evaluasi selalu terlihat ketika evaluasi diizinkan; seluruh temuan, kutipan, alasan, tindakan, empat aspek dan rujukan tersedia melalui `details/summary` yang awalnya tertutup. Tinggi artikel mengikuti konten. Membuka rincian mengalirkan pertanyaan berikutnya secara alami; menutupnya mengembalikan posisi semula. Tidak ada margin negatif, pemotongan isi, tinggi percakapan tetap, atau ruang cadangan. Jarak antar-giliran 28 px dan lebar baca maksimal 780 px berlaku pada semua ukuran. Panduan menjawab dipindahkan ke buka/tutup di bawah formulir; salinan konteks lengkap tetap tersedia. Aturan mode Simulasi tidak berubah.
+
+## Implementasi
+
+Halaman sesi dikerjakan terlebih dahulu, lalu tema diterapkan ke komponen bersama, navigasi, beranda/riwayat, profil, evaluasi, dan kelemahan.
+
+- Tema editorial memakai permukaan putih, latar mint muda untuk halaman umum dan kertas hangat untuk sesi aktif, teks tinta, aksen Oxford navy, garis tipis, sudut tegas, serta tanpa bayangan dekoratif.
+- Token warna dan font tersedia di `@theme inline` Tailwind dan variabel CSS proyek. Tombol, input, kartu, badge, error, keadaan kosong, dan header tetap melalui komponen bersama `src/components/ui.tsx`.
+- Navigasi desktop berada di atas dengan penanda halaman aktif. Sesi terbuka hanya muncul ketika ada sesi yang dibuka. Menu mobile menggeser konten ke bawah; Escape menutup menu dan mengembalikan fokus ke tombol. Skip link, label permanen, focus keyboard, error field dan penghitung karakter dipertahankan.
+- Sesi menampilkan judul snapshot penelitian, mode, status, tanggal pembuatan, progres utama dan penanda susulan dari data API. Transkrip satu kolom maksimal 780 px, dengan evaluasi tepat di bawah jawaban asal. Pertanyaan aktif diberi border navy dan textarea panjang.
+- Kutipan mahasiswa dibedakan dari alasan AI. Di dalam rincian evaluasi, urutan temuan → kutipan → alasan → tindakan dipertahankan tanpa pemotongan. Konteks lengkap tetap tersedia di bagian bawah sesi.
+- Hanya jawaban yang dikonfirmasi server diberi label tersimpan. Draf tetap berada di state aplikasi ketika berpindah halaman atau permintaan gagal; pengiriman ganda dicegah. Status proses mengikuti permintaan sebenarnya. Aksi akhiri sesi terpisah dari kirim jawaban.
+- Evaluasi Simulasi tetap disaring oleh server dan tidak dirender sebelum selesai. Adapter AI, API, kontrak validasi, skema database, snapshot dan penyimpanan riwayat tidak diubah.
+- Pengaturan sesi menggunakan pilihan radio Latihan/Simulasi dengan petunjuk masing-masing. Panel naskah menampilkan profil yang benar-benar dipilih. Riwayat berasal dari sesi tersimpan.
+- Profil dibagi menjadi tiga bagian bernomor. Kelemahan menempatkan bukti dan formulir status/catatan berdampingan di desktop, bertumpuk di ponsel. Latih kembali tetap menjadi aksi utama. Perbandingan lama/baru tetap tersedia pada hasil sesi latihan ulang.
+
+## Perbedaan dari referensi
+
+| Bagian | Adaptasi dan alasan |
+| --- | --- |
+| Tipografi dan ikon | Georgia/Cambria serta sans-serif sistem menggantikan Newsreader/Inter jaringan. Ikon SVG lokal menggantikan Material Symbols. Aplikasi tidak membutuhkan CDN baru. |
+| Isi naskah dan evaluasi | Judul DIVA, kandidat, penguji, kutipan dan metadata contoh tidak disalin ke aplikasi. Isi berasal dari Overview, profil dan SessionView API yang sudah ada. Screenshot pengujian memakai database sintetis terpisah. |
+| Evaluasi | Evaluasi berada di bawah jawaban pada semua ukuran. Ringkasan langsung terlihat dan rincian bisa dibuka/tutup. Kolom kanan referensi dihapus untuk mencegah tinggi baris tidak seimbang. Mode Simulasi tidak membuka catatan lebih awal. |
+| Tablet dan mobile | Alur percakapan sama dengan desktop. Tidak memakai tab atau bottom sheet tambahan; urutan baca dan navigasi keyboard tetap linear. Panduan menjawab dapat dibuka di bawah formulir; konteks lengkap tetap tersedia. |
+| Statistik dan status | Tidak ada skor kelulusan/kesiapan, durasi rekaan, kategori yang tidak tersimpan, identitas dewan penguji, akreditasi, atau klaim kerahasiaan mutlak. Status disimpan, mengirim, dan gagal mengikuti keadaan aplikasi. |
+| Aksi di luar MVP | Ekspor PDF/teks, transkrip suara, unggah naskah, kutip bab otomatis, duplikasi/versi profil, dan tombol simulasi status desain tidak ditambahkan. Perbandingan tetap melalui sesi latihan ulang yang tersedia. |
+| Formulir dan penyimpanan | Wajib hanya judul, latar belakang dan tujuan sesuai PRD. Batas tetap total profil 30.000 karakter dan jawaban 6.000 karakter, tanpa batas per-field rekaan dari desain. Tidak ada autosave draf ke disk; penyimpanan profil dan catatan tetap eksplisit. |
+| Beranda | Mulai latihan tetap membuka pengaturan sesi. Keadaan kosong dan data riwayat menyesuaikan data pengguna, sehingga tidak selalu menyerupai referensi yang seluruhnya sudah terisi. |
+
+## Verifikasi
+
+Lint, typecheck, build Next.js, 12 tes service/konfigurasi dan 6 tes browser lulus. Skrip npm build sempat gagal dengan EPERM ketika Prisma mencoba mengganti DLL yang digunakan server dev. Karena tidak ada perubahan skema, build produksi dijalankan langsung dengan `node node_modules/next/dist/bin/next build` menggunakan client yang tersedia; proses tersebut lulus dan server dev tetap berjalan. Tes browser memakai Chrome headless, build produksi, database terpisah, dan gateway palsu pada loopback.
+
+| Lebar | Navigasi | Transkrip dan evaluasi | Perbandingan |
 | --- | --- | --- | --- |
-| 360 px | Menu yang dapat dibuka/tutup | Mengikuti lebar layar | Bertumpuk, label lama/baru jelas |
-| 768 px | Menu yang dapat dibuka/tutup | Mengikuti lebar layar | Dua kolom |
-| 1440 px | Sidebar 236 px | Maksimal 780 px | Dua kolom |
+| 360 px | Menu buka/tutup di alur dokumen | Satu kolom, evaluasi sesudah jawaban asal | Bertumpuk |
+| 768 px | Menu buka/tutup di alur dokumen | Satu kolom agar area baca nyaman | Dua kolom |
+| 1440 px | Navigasi atas | Transkrip maksimal 780 px, evaluasi sesudah jawaban asal | Dua kolom |
 
-Tes meliputi:
+Alur browser memeriksa profil → sesi Simulasi → kegagalan jaringan/gateway → restart aplikasi → retry → akhir sesi → evaluasi → catatan/status kelemahan → latihan ulang → perbandingan. Pemeriksaan tambahan membuka mode Latihan dengan susulan aktif dan evaluasi di bawah jawaban, menolak jawaban 6.001 karakter, memastikan draf bertahan, dan memastikan dua klik hanya menghasilkan satu permintaan.
 
-1. Tautan langsung ke konten lewat Tab/Enter, menu melalui Escape, serta fokus field invalid pertama.
-2. Label dan petunjuk profil, error field wajib, kegagalan menyimpan, serta teks yang bertahan saat memuat ulang status.
-3. Mulai latihan, sesi aktif di beranda, dan draf jawaban yang tetap tersedia ketika sesi dilanjutkan.
-4. Dua klik dalam giliran yang sama menghasilkan satu permintaan. Kegagalan jaringan tidak menghapus teks dan tidak memberi label tersimpan yang keliru.
-5. Kegagalan gateway sesudah commit, restart proses aplikasi, reload, dan retry tanpa giliran ganda.
-6. Evaluasi Simulasi tidak tampil atau dikirim dalam DTO sebelum selesai; evaluasi tampil setelah akhir awal.
-7. Catatan/status, pemilihan kelemahan, latihan ulang, dan perbandingan lama/baru dengan susunan responsif.
-8. Tidak ada overflow horizontal pada beranda, profil, pengaturan, sesi, kondisi gagal, evaluasi, kelemahan, dan perbandingan; tidak ada pageerror JavaScript.
+Skenario regresi `tests/browser/session-flow.spec.ts` menyiapkan tiga jawaban pendek dengan masing-masing tiga temuan panjang melalui gateway pengujian dan validasi aplikasi. Pada ketiga ukuran, tes memeriksa urutan pertanyaan/jawaban/evaluasi, rincian yang awalnya tertutup, lebar baca, jarak antar-giliran 24–32 px (CSS 28 px), ketiadaan min-height/max-height/clipping pada artikel, dan posisi pertanyaan berikutnya. Buka/tutup dengan Enter mengubah tinggi artikel sesuai konten lalu mengembalikannya. Isi alasan dan tindakan dicocokkan dengan DTO sehingga rincian panjang tidak terpotong.
 
-Lint, typecheck, build, 12 tes service/konfigurasi dan 3 tes browser lulus. Rasio kontras palet utama dihitung: tombol utama 6,29:1, teks utama 14,33:1, teks sekunder 5,77:1, badge informasi 7,77:1, sukses 6,37:1, peringatan 5,47:1, dan bahaya 6,17:1. Ini pemeriksaan palet, bukan audit aksesibilitas menyeluruh.
+Ketiga ukuran tidak memiliki overflow horizontal pada halaman yang diperiksa atau error JavaScript; tes siklus lengkap juga memeriksa ketiadaan permintaan browser ke font/CDN eksternal. Fokus skip link, menu Escape, fokus field invalid pertama, label dan keadaan disabled diperiksa. Selector sesi mengikuti profil yang sedang diuji ketika terdapat beberapa sesi aktif. Runner terakhir selesai dengan exit code 0: 6 passed (38,6 detik). Server fixture ditutup oleh runner.
 
-## Screenshot lokal
+Kontras pasangan utama dihitung: tombol navy 13,93:1, teks utama 17,08:1, teks sekunder 6,38:1, badge informasi 12,73:1, sukses 7,06:1, peringatan 5,98:1, dan bahaya 6,73:1. Ini pemeriksaan palet, bukan audit aksesibilitas menyeluruh.
 
-Setiap proyek browser merekam beranda, profil, pengaturan, sesi aktif, kondisi gagal, evaluasi, kelemahan, serta latihan ulang di `playwright-report/artifacts/`. Salinan dengan nama singkat tersedia di `playwright-report/ui-review/` setelah peninjauan. Direktori tersebut diabaikan Git; screenshot hanya berisi data sintetis.
+Integritas akhir diperiksa lewat hash: `.env`, `.env.local`, dan `prisma/dev.db` sama dengan awal pekerjaan. Nilai API key tidak ditemukan dalam 12 aset client yang diperiksa. Tidak ada dependensi baru, migrasi baru, data contoh desain yang dimasukkan ke database utama, atau perubahan konfigurasi lokal.
 
-Screenshot terpilih: `beranda-1440.png`, `riwayat-1440.png`, `profil-1440.png`, `sesi-1440.png`, `sesi-768.png`, `sesi-360.png`, `hasil-1440.png`, `hasil-360.png`, dan `kelemahan-360.png`.
+## Screenshot lokal dan batas verifikasi
 
-Integritas akhir diperiksa lewat hash: `.env`, `.env.local`, dan `prisma/dev.db` sama dengan awal pekerjaan. Nilai API key tidak ditemukan dalam 11 aset browser yang diperiksa. Tidak ada dependensi baru. Server pengujian sudah dihentikan setelah seluruh tes browser lulus.
+Screenshot koreksi alur dengan rincian tertutup dan terbuka telah ditinjau pada desktop 1440 px dan mobile 360 px. Salinan berada di `playwright-report/session-flow-review/`: `desktop-1440-tertutup.png`, `desktop-1440-terbuka.png`, `mobile-360-tertutup.png`, dan `mobile-360-terbuka.png`; artefak tablet 768 px juga direkam dan diperiksa melalui tes geometri browser. Screenshot siklus lengkap diperbarui di `playwright-report/stitch-review/`. Artefak asli berada di `playwright-report/artifacts/`. Direktori screenshot diabaikan Git dan hanya memuat data sintetis.
 
-## Batas verifikasi
-
-AI nyata tidak dipanggil ulang untuk perubahan presentasi ini; hasil uji nyata sebelumnya tetap ada di `AI-VALIDATION.md`. Pengujian baru memeriksa alur melalui gateway palsu dan mempertahankan integrasi server. Screen reader dan browser selain Chrome belum diuji secara langsung. Tidak ada klaim audit WCAG penuh.
+AI nyata tidak dipanggil ulang untuk adaptasi tampilan. Hasil integrasi nyata sebelumnya tetap tercatat di [AI-VALIDATION.md](AI-VALIDATION.md); pemadaman langsung 9Router masih belum diuji. Screen reader, browser selain Chrome, serta kecocokan pixel terhadap font Newsreader asli belum diverifikasi. Referensi HTML tidak dijalankan atau disisipkan ke aplikasi sebagai halaman statis.
